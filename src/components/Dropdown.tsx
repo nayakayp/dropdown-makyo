@@ -8,7 +8,8 @@ interface Option {
 interface DropdownProps {
   options: Option[];
   placeholder?: string;
-  onChange?: (value: Option) => void;
+  onChange?: (value: Option[]) => void;
+  multiple?: boolean;
 }
 
 export const Dropdown = ({
@@ -18,7 +19,7 @@ export const Dropdown = ({
 }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedOption, setSelectedOption] = useState<Option | null>(null);
+  const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -54,10 +55,22 @@ export const Dropdown = ({
   );
 
   const handleOptionClick = (option: Option) => {
-    setSelectedOption(option);
-    setIsOpen(false);
+    const isSelected = selectedOptions.some(
+      (selected) => selected.value === option.value,
+    );
+    let newSelectedOptions: Option[];
+
+    if (isSelected) {
+      newSelectedOptions = selectedOptions.filter(
+        (selected) => selected.value !== option.value,
+      );
+    } else {
+      newSelectedOptions = [...selectedOptions, option];
+    }
+
+    setSelectedOptions(newSelectedOptions);
     setSearchTerm("");
-    onChange?.(option);
+    onChange?.(newSelectedOptions);
   };
 
   const handleButtonClick = () => {
@@ -105,7 +118,42 @@ export const Dropdown = ({
         onClick={handleButtonClick}
         className="w-full px-4 py-2 text-left bg-white border border-gray-300 rounded-xs focus:outline-none cursor-pointer relative pr-10"
       >
-        {selectedOption ? selectedOption.label : placeholder}
+        {selectedOptions.length > 0 ? (
+          <div className="flex flex-wrap gap-1">
+            {selectedOptions.map((option) => (
+              <span
+                key={option.value}
+                className="bg-gray-200 px-2 py-1 rounded-full text-xs text-gray-800 flex items-center gap-1 group"
+              >
+                {option.label}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleOptionClick(option);
+                  }}
+                  className="border cursor-pointer p-0.5 rounded-full transition-colors"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="10"
+                    height="10"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M18 6 6 18" />
+                    <path d="m6 6 12 12" />
+                  </svg>
+                </button>
+              </span>
+            ))}
+          </div>
+        ) : (
+          placeholder
+        )}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -148,7 +196,11 @@ export const Dropdown = ({
               key={option.value}
               onClick={() => handleOptionClick(option)}
               className={`-mx-4 px-4 py-2 cursor-pointer hover:bg-gray-100 ${
-                selectedOption?.value === option.value ? "bg-teal-100" : ""
+                selectedOptions.some(
+                  (selected) => selected.value === option.value,
+                )
+                  ? "bg-teal-100"
+                  : ""
               }`}
             >
               {highlightText(option.label, searchTerm)}
