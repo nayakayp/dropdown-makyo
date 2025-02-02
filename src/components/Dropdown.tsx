@@ -11,6 +11,7 @@ interface DropdownProps {
   onChange?: (value: Option[]) => void;
   multiple?: boolean;
   withSearch?: boolean;
+  renderOption?: (option: Option) => React.ReactNode;
 }
 
 export const Dropdown = ({
@@ -19,6 +20,7 @@ export const Dropdown = ({
   onChange,
   multiple,
   withSearch = true,
+  renderOption,
 }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -195,7 +197,7 @@ export const Dropdown = ({
               placeholder="Search..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-8 py-2 border border-gray-300 focus:outline-none pr-8"
+              className="w-full px-8 py-2 border-x border-t border-gray-300 focus:outline-none pr-8"
               onClick={(e) => e.stopPropagation()}
             />
             {searchTerm && (
@@ -238,7 +240,7 @@ export const Dropdown = ({
           </div>
         )}
 
-        <ul className="max-h-60 overflow-auto px-4 pb-4 border-gray-300 border-b border-r border-l">
+        <ul className="max-h-60 overflow-auto px-4 pb-4 border-gray-300 border">
           {filteredOptions.map((option) => (
             <li
               key={option.value}
@@ -251,7 +253,9 @@ export const Dropdown = ({
                   : ""
               }`}
             >
-              {highlightText(option.label, searchTerm)}
+              {renderOption
+                ? renderOption(option)
+                : highlightText(option.label, searchTerm)}
             </li>
           ))}
           {filteredOptions.length === 0 && (
