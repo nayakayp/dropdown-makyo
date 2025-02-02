@@ -10,12 +10,15 @@ interface DropdownProps {
   placeholder?: string;
   onChange?: (value: Option[]) => void;
   multiple?: boolean;
+  withSearch?: boolean;
 }
 
 export const Dropdown = ({
   options,
   placeholder = "Select an option",
   onChange,
+  multiple,
+  withSearch = true,
 }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -60,12 +63,16 @@ export const Dropdown = ({
     );
     let newSelectedOptions: Option[];
 
-    if (isSelected) {
-      newSelectedOptions = selectedOptions.filter(
-        (selected) => selected.value !== option.value,
-      );
+    if (multiple) {
+      if (isSelected) {
+        newSelectedOptions = selectedOptions.filter(
+          (selected) => selected.value !== option.value,
+        );
+      } else {
+        newSelectedOptions = [...selectedOptions, option];
+      }
     } else {
-      newSelectedOptions = [...selectedOptions, option];
+      newSelectedOptions = isSelected ? [] : [option];
     }
 
     setSelectedOptions(newSelectedOptions);
@@ -180,15 +187,56 @@ export const Dropdown = ({
             : "opacity-0 -translate-y-2 pointer-events-none"
         }`}
       >
-        <input
-          ref={searchInputRef}
-          type="text"
-          placeholder="Search..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 focus:outline-none"
-          onClick={(e) => e.stopPropagation()}
-        />
+        {withSearch && (
+          <div className="relative w-full">
+            <input
+              ref={searchInputRef}
+              type="text"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full px-8 py-2 border border-gray-300 focus:outline-none pr-8"
+              onClick={(e) => e.stopPropagation()}
+            />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm("")}
+                className="absolute inset-y-0 right-0 flex items-center justify-center pr-2"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  className="lucide lucide-x absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-white bg-gray-400 rounded-full cursor-pointer p-0.5"
+                >
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </button>
+            )}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              className="lucide lucide-search text-gray-400 absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.3-4.3" />
+            </svg>
+          </div>
+        )}
 
         <ul className="max-h-60 overflow-auto px-4 pb-4 border-gray-300 border-b border-r border-l">
           {filteredOptions.map((option) => (

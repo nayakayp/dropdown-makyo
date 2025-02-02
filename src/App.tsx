@@ -111,6 +111,7 @@ function App() {
         options={options}
         placeholder="Select an option"
         onChange={(option) => console.log("Selected:", option)}
+        // withSearch={false}
       />
     </div>
   );
