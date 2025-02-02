@@ -1,55 +1,75 @@
-import React, { useState } from "react";
-import Select, { components, ControlProps, OptionProps } from "react-select";
-import { Manager, Reference, Popper } from "react-popper";
+import { useState } from "react";
 
-interface DropdownProps {
-  options: { value: string; label: string }[];
-  isMulti?: boolean;
-  isSearchable?: boolean;
-  customOptionRenderer?: (props: OptionProps) => React.ReactNode;
+interface Option {
+  value: string;
+  label: string;
 }
 
-const Dropdown: React.FC<DropdownProps> = ({
-  options,
-  isMulti = false,
-  isSearchable = true,
-  customOptionRenderer,
-}) => {
-  const [selectedOptions, setSelectedOptions] = useState<any>(null);
+interface DropdownProps {
+  options: Option[];
+  placeholder?: string;
+  onChange?: (value: Option) => void;
+}
 
-  const CustomOption = customOptionRenderer
-    ? customOptionRenderer
-    : (props: OptionProps) => <components.Option {...props} />;
+export const Dropdown = ({
+  options,
+  placeholder = "Select an option",
+  onChange,
+}: DropdownProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedOption, setSelectedOption] = useState<Option | null>(null);
+
+  const filteredOptions = options.filter((option) =>
+    option.label.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
+  const handleOptionClick = (option: Option) => {
+    setSelectedOption(option);
+    setIsOpen(false);
+    setSearchTerm("");
+    onChange?.(option);
+  };
 
   return (
-    <Manager>
-      <Reference>
-        {({ ref }) => (
-          <div ref={ref}>
-            <Select
-              components={{ Option: CustomOption }}
-              value={selectedOptions}
-              onChange={setSelectedOptions}
-              options={options}
-              isMulti={isMulti}
-              isSearchable={isSearchable}
-              styles={{
-                menuPortal: (provided) => ({ ...provided, zIndex: 9999 }),
-              }}
-              menuPortalTarget={document.body}
+    <div className="relative w-full">
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full px-4 py-2 text-left bg-white border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        {selectedOption ? selectedOption.label : placeholder}
+      </button>
+
+      {isOpen && (
+        <div className="absolute w-full mt-1 bg-white border rounded-md shadow-lg z-10">
+          <div className="p-2">
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onClick={(e) => e.stopPropagation()}
             />
           </div>
-        )}
-      </Reference>
-      <Popper placement="bottom-start">
-        {({ ref, style, placement }) => (
-          <div ref={ref} style={style} data-placement={placement}>
-            {/* Popper content will be rendered here */}
-          </div>
-        )}
-      </Popper>
-    </Manager>
+
+          <ul className="max-h-60 overflow-auto">
+            {filteredOptions.map((option) => (
+              <li
+                key={option.value}
+                onClick={() => handleOptionClick(option)}
+                className="px-4 py-2 cursor-pointer hover:bg-gray-100"
+              >
+                {option.label}
+              </li>
+            ))}
+            {filteredOptions.length === 0 && (
+              <li className="px-4 py-2 text-gray-500">No options found</li>
+            )}
+          </ul>
+        </div>
+      )}
+    </div>
   );
 };
-
-export default Dropdown;
