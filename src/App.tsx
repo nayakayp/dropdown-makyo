@@ -11,7 +11,7 @@ function App() {
   ];
 
   return (
-    <div className="">
+    <div className="p-4">
       <h1 className="text-xl font-bold mb-4">Searchable Dropdown Example</h1>
       <Dropdown
         options={options}
