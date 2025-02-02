@@ -1,10 +1,10 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect, useMemo, ReactNode } from "react";
+import { createPortal } from "react-dom";
 
 interface Option {
   value: string;
   label: string;
 }
-
 interface DropdownProps {
   options: Option[];
   placeholder?: string;
@@ -12,6 +12,7 @@ interface DropdownProps {
   multiple?: boolean;
   withSearch?: boolean;
   renderOption?: (option: Option) => React.ReactNode;
+  portal?: boolean; // Add portal prop
 }
 
 export const Dropdown = ({
@@ -21,6 +22,7 @@ export const Dropdown = ({
   multiple,
   withSearch = true,
   renderOption,
+  portal = false,
 }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -90,6 +92,16 @@ export const Dropdown = ({
     if (isOpen && searchInputRef.current) {
       searchInputRef.current.focus();
     }
+
+    // Set dropdown width CSS variable
+    if (dropdownRef.current) {
+      const width = dropdownRef.current.offsetWidth;
+      document.documentElement.style.setProperty(
+        "--dropdown-width",
+        `${width}px`,
+      );
+    }
+
     return () => {};
   }, [isOpen]);
 
@@ -120,7 +132,7 @@ export const Dropdown = ({
     };
   }, [isOpen]);
 
-  return (
+  const dropdownContent = (
     <div ref={dropdownRef} className="relative w-full">
       <button
         type="button"
@@ -265,4 +277,37 @@ export const Dropdown = ({
       </div>
     </div>
   );
+
+  if (portal) {
+    return (
+      <>
+        {dropdownContent}
+        {isOpen &&
+          createPortal(
+            <div
+              className={`fixed z-50 w-[var(--dropdown-width)] ${
+                isOpen
+                  ? "opacity-100 translate-y-0 pointer-events-auto"
+                  : "opacity-0 -translate-y-2 pointer-events-none"
+              }`}
+              style={{
+                top: dropdownRef.current
+                  ? dropdownRef.current.getBoundingClientRect().bottom +
+                    window.scrollY
+                  : 0,
+                left: dropdownRef.current
+                  ? dropdownRef.current.getBoundingClientRect().left +
+                    window.scrollX
+                  : 0,
+              }}
+            >
+              {dropdownContent.props.children[1]}
+            </div>,
+            document.body,
+          )}
+      </>
+    );
+  }
+
+  return dropdownContent;
 };
