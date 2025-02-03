@@ -16,7 +16,7 @@ export const SearchInput = ({
       placeholder="Search..."
       value={searchTerm}
       onChange={(e) => setSearchTerm(e.target.value)}
-      className="w-full px-8 py-2 border-x border-t border-gray-300 focus:outline-none pr-8"
+      className="w-full bg-white px-8 py-2 border-x border-t border-gray-300 focus:outline-none pr-8"
       onClick={(e) => e.stopPropagation()}
     />
     {searchTerm && (

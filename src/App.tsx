@@ -61,42 +61,44 @@ function App() {
           </div>
         </div>
       </div>
-      <div className="mt-4">
-        <h3 className="text-base font-medium mb-2 text-teal-500">
-          Regular Dropdown
-        </h3>
+      <div className="flex">
+        <div className="flex-1 mt-4">
+          <h3 className="text-base font-medium mb-2 text-teal-500">
+            Regular Dropdown
+          </h3>
 
-        <Dropdown
-          outlined={outlined}
-          options={options}
-          placeholder="Select an option"
-          onChange={(option) => console.log("Selected:", option)}
-          withSearch={withSearch}
-          multiple={multiple}
-          portal={portal}
-        />
-      </div>
+          <Dropdown
+            outlined={outlined}
+            options={options}
+            placeholder="Select an option"
+            onChange={(option) => console.log("Selected:", option)}
+            withSearch={withSearch}
+            multiple={multiple}
+            portal={portal}
+          />
+        </div>
 
-      <div className="mt-4">
-        <h3 className="text-base font-medium mb-2 text-teal-500">
-          Custom Option Rendering
-        </h3>
-        <Dropdown
-          outlined={outlined}
-          portal={portal}
-          options={options}
-          placeholder="Select items..."
-          withSearch={withSearch}
-          multiple={multiple}
-          onChange={(selected) => console.log(selected)}
-          renderOption={(option) => (
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-teal-500"></div>
-              <span>{option.label}</span>
-              <span className="text-gray-400 text-sm">({option.value})</span>
-            </div>
-          )}
-        />
+        <div className="flex-1 mt-4">
+          <h3 className="text-base font-medium mb-2 text-teal-500">
+            Custom Option Rendering
+          </h3>
+          <Dropdown
+            outlined={outlined}
+            portal={portal}
+            options={options}
+            placeholder="Select items..."
+            withSearch={withSearch}
+            multiple={multiple}
+            onChange={(selected) => console.log(selected)}
+            renderOption={(option) => (
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-teal-500"></div>
+                <span>{option.label}</span>
+                <span className="text-gray-400 text-sm">({option.value})</span>
+              </div>
+            )}
+          />
+        </div>
       </div>
     </div>
   );
