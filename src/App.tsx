@@ -6,14 +6,24 @@ import { useState } from "react";
 function App() {
   const [withSearch, setWithSearch] = useState(false);
   const [multiple, setMultiple] = useState(true);
+  const [portal, setPortal] = useState(false);
 
   return (
     <div className="p-4">
-      <h1 className="text-xl font-bold mb-4">Searchable Dropdown Example</h1>
+      <button
+        onClick={() => {
+          window.open("https://nayakayoga.com", "_blank");
+          setPortal(!portal);
+        }}
+        className="fixed z-[1001] -right-[52px] py-2 px-4 top-1/3 -rotate-90 bg-blue-400 text-white cursor-pointer rounded-tr-xl rounded-tl-xl"
+      >
+        By: @nayakayp
+      </button>
+      <h1 className="text-xl font-bold mb-4">Dropdown Demo for Makyo Co</h1>
       <div className="flex gap-4">
         <h2 className="font-bold">Settings:</h2>
-        <div className="">
-          <div className="mb-4">
+        <div className="flex flex-col gap-0.5">
+          <div className="">
             <label className="mr-2">With Search:</label>
             <input
               type="checkbox"
@@ -22,12 +32,21 @@ function App() {
             />
           </div>
 
-          <div className="mb-4">
+          <div className="">
             <label className="mr-2">Multiple:</label>
             <input
               type="checkbox"
               checked={multiple}
               onChange={() => setMultiple(!multiple)}
+            />
+          </div>
+
+          <div className="">
+            <label className="mr-2">Use Portal:</label>
+            <input
+              type="checkbox"
+              checked={portal}
+              onChange={() => setPortal(!portal)}
             />
           </div>
         </div>
@@ -43,6 +62,7 @@ function App() {
           onChange={(option) => console.log("Selected:", option)}
           withSearch={withSearch}
           multiple={multiple}
+          portal={portal}
         />
       </div>
 
