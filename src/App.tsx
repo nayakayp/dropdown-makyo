@@ -71,6 +71,7 @@ function App() {
           Custom Option Rendering
         </h3>
         <Dropdown
+          portal={portal}
           options={options}
           placeholder="Select items..."
           withSearch={withSearch}
