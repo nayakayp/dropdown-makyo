@@ -28,7 +28,7 @@ To use the Dropdown component, follow these steps:
 
 1. **Import the Dropdown Component**
 
-```typescriptreact
+```typescript
 import { Dropdown } from "./components/Dropdown";
 ```
 
@@ -46,7 +46,7 @@ export const options = [
 
 3. **Include the Dropdown in Your Component**
 
-   ```typescriptreact
+   ```typescript
    function App() {
      const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
 
@@ -82,7 +82,7 @@ The Dropdown component accepts the following props:
 
 Here's a complete example of how to set up and use the Dropdown component:
 
-```typescriptreact
+```typescript
 import { Dropdown } from "./components/Dropdown";
 import { options } from "./data/options";
 import { useState } from "react";
@@ -118,5 +118,7 @@ export default App;
 
 ## Additional Resources
 
+- [Dropdown Demo](https://dropdown-makyo.vercel.app/)
+- [Dropdown Storybook](https://dropdown-makyo-storybook.vercel.app/)
 - [TailwindCSS Documentation](https://tailwindcss.com/docs)
-- [TypeScript Documentation](<https://www.typescriptlang.org/docs>
+- [TypeScript Documentation](https://www.typescriptlang.org/docs)
