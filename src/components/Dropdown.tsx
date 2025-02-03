@@ -1,3 +1,4 @@
+import { ChevronDown, Search, X } from "lucide-react";
 import { useState, useRef, useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
 
@@ -160,20 +161,7 @@ export const Dropdown = ({
                     }}
                     className="border cursor-pointer p-0.5 rounded-full transition-colors"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="10"
-                      height="10"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M18 6 6 18" />
-                      <path d="m6 6 12 12" />
-                    </svg>
+                    <X size={10} />
                   </button>
                 </span>
               ))}
@@ -181,23 +169,11 @@ export const Dropdown = ({
           ) : (
             placeholder
           )}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+          <ChevronDown
             className={`lucide lucide-chevron-down absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 transition-transform duration-200 ${
               isOpen ? "rotate-180" : "rotate-0"
             }`}
-          >
-            <path d="m6 9 6 6 6-6" />
-          </svg>
-          {/* <ChevronUpDownIcon /> */}
+          />
         </button>
 
         <div
@@ -223,38 +199,10 @@ export const Dropdown = ({
                   onClick={() => setSearchTerm("")}
                   className="absolute inset-y-0 right-0 flex items-center justify-center pr-2"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    className="lucide lucide-x absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-white bg-gray-400 rounded-full cursor-pointer p-0.5"
-                  >
-                    <path d="M18 6 6 18" />
-                    <path d="m6 6 12 12" />
-                  </svg>
+                  <X className="lucide lucide-x absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-white bg-gray-400 rounded-full cursor-pointer p-0.5" />
                 </button>
               )}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                className="lucide lucide-search text-gray-400 absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4"
-              >
-                <circle cx="11" cy="11" r="8" />
-                <path d="m21 21-4.3-4.3" />
-              </svg>
+              <Search className="lucide lucide-search text-gray-400 absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4" />
             </div>
           )}
 
@@ -308,20 +256,7 @@ export const Dropdown = ({
                     }}
                     className="border cursor-pointer p-0.5 rounded-full transition-colors"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="10"
-                      height="10"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M18 6 6 18" />
-                      <path d="m6 6 12 12" />
-                    </svg>
+                    <X size={10} />
                   </button>
                 </span>
               ))}
@@ -329,22 +264,11 @@ export const Dropdown = ({
           ) : (
             placeholder
           )}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+          <ChevronDown
             className={`lucide lucide-chevron-down absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 transition-transform duration-200 ${
               isOpen ? "rotate-180" : "rotate-0"
             }`}
-          >
-            <path d="m6 9 6 6 6-6" />
-          </svg>
+          />
         </button>
         {createPortal(
           <div
@@ -382,38 +306,10 @@ export const Dropdown = ({
                     onClick={() => setSearchTerm("")}
                     className="absolute inset-y-0 right-0 flex items-center justify-center pr-2"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      className="lucide lucide-x absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-white bg-gray-400 rounded-full cursor-pointer p-0.5"
-                    >
-                      <path d="M18 6 6 18" />
-                      <path d="m6 6 12 12" />
-                    </svg>
+                    <X className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-white bg-gray-400 rounded-full cursor-pointer p-0.5" />
                   </button>
                 )}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  className="lucide lucide-search text-gray-400 absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4"
-                >
-                  <circle cx="11" cy="11" r="8" />
-                  <path d="m21 21-4.3-4.3" />
-                </svg>
+                <Search className="lucide lucide-search text-gray-400 absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4" />
               </div>
             )}
             <ul className="max-h-60 overflow-auto px-4 pb-4 border-gray-300 border bg-white">
