@@ -8,17 +8,21 @@ export const DropdownButton = ({
   isOpen,
   handleOptionClick,
   handleButtonClick,
+  outlined = true,
 }: {
   selectedOptions: Option[];
   placeholder: string;
   isOpen: boolean;
   handleOptionClick: (option: Option) => void;
   handleButtonClick: () => void;
+  outlined?: boolean;
 }) => (
   <button
     type="button"
     onClick={handleButtonClick}
-    className="w-full px-4 py-2 text-left bg-white border border-gray-300 rounded-xs focus:outline-none cursor-pointer relative pr-10"
+    className={`w-full px-4 py-2 text-left rounded-xs focus:outline-none cursor-pointer relative pr-10 ${
+      outlined ? "bg-white border border-gray-300" : "bg-gray-300"
+    }`}
   >
     {selectedOptions.length > 0 ? (
       <div className="flex flex-wrap gap-1">

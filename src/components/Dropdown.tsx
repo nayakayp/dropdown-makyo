@@ -16,6 +16,7 @@ interface DropdownProps {
   withSearch?: boolean;
   renderOption?: (option: Option) => React.ReactNode;
   portal?: boolean;
+  outlined?: boolean;
 }
 
 export const Dropdown = ({
@@ -26,6 +27,7 @@ export const Dropdown = ({
   withSearch = true,
   renderOption,
   portal = false,
+  outlined = true,
 }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -115,6 +117,7 @@ export const Dropdown = ({
           isOpen={isOpen}
           handleOptionClick={handleOptionClick}
           handleButtonClick={() => setIsOpen(!isOpen)}
+          outlined={outlined}
         />
 
         <div
@@ -153,6 +156,7 @@ export const Dropdown = ({
           isOpen={isOpen}
           handleOptionClick={handleOptionClick}
           handleButtonClick={() => setIsOpen(!isOpen)}
+          outlined={outlined}
         />
         {createPortal(
           <div

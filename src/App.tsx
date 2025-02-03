@@ -7,6 +7,7 @@ function App() {
   const [withSearch, setWithSearch] = useState(false);
   const [multiple, setMultiple] = useState(true);
   const [portal, setPortal] = useState(false);
+  const [outlined, setOutlined] = useState(true);
 
   return (
     <div className="p-4">
@@ -49,6 +50,15 @@ function App() {
               onChange={() => setPortal(!portal)}
             />
           </div>
+
+          <div className="">
+            <label className="mr-2">Outlined?:</label>
+            <input
+              type="checkbox"
+              checked={outlined}
+              onChange={() => setOutlined(!outlined)}
+            />
+          </div>
         </div>
       </div>
       <div className="mt-4">
@@ -57,6 +67,7 @@ function App() {
         </h3>
 
         <Dropdown
+          outlined={outlined}
           options={options}
           placeholder="Select an option"
           onChange={(option) => console.log("Selected:", option)}
@@ -71,6 +82,7 @@ function App() {
           Custom Option Rendering
         </h3>
         <Dropdown
+          outlined={outlined}
           portal={portal}
           options={options}
           placeholder="Select items..."
