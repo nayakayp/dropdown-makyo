@@ -1,6 +1,8 @@
-import { ChevronDown, Search, X } from "lucide-react";
 import { useState, useRef, useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
+import { DropdownButton } from "./DropdownButton";
+import { SearchInput } from "./SearchInput";
+import { OptionsList } from "./OptionList";
 
 interface Option {
   value: string;
@@ -32,29 +34,6 @@ export const Dropdown = ({
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const portalRef = useRef<HTMLDivElement | null>(null);
 
-  const highlightText = (text: string, highlight: string) => {
-    if (!highlight.trim()) {
-      return <span>{text}</span>;
-    }
-
-    const regex = new RegExp(`(${highlight})`, "gi");
-    const parts = text.split(regex);
-
-    return (
-      <span>
-        {parts.map((part, index) =>
-          part.toLowerCase() === highlight.toLowerCase() ? (
-            <span key={index} className="bg-teal-300">
-              {part}
-            </span>
-          ) : (
-            <span key={index}>{part}</span>
-          ),
-        )}
-      </span>
-    );
-  };
-
   const filteredOptions = useMemo(
     () =>
       options.filter((option) =>
@@ -70,13 +49,9 @@ export const Dropdown = ({
     let newSelectedOptions: Option[];
 
     if (multiple) {
-      if (isSelected) {
-        newSelectedOptions = selectedOptions.filter(
-          (selected) => selected.value !== option.value,
-        );
-      } else {
-        newSelectedOptions = [...selectedOptions, option];
-      }
+      newSelectedOptions = isSelected
+        ? selectedOptions.filter((selected) => selected.value !== option.value)
+        : [...selectedOptions, option];
     } else {
       newSelectedOptions = isSelected ? [] : [option];
     }
@@ -86,16 +61,11 @@ export const Dropdown = ({
     onChange?.(newSelectedOptions);
   };
 
-  const handleButtonClick = () => {
-    setIsOpen(!isOpen);
-  };
-
   useEffect(() => {
     if (isOpen && searchInputRef.current) {
       searchInputRef.current.focus();
     }
 
-    // Set dropdown width CSS variable
     if (dropdownRef.current) {
       const width = dropdownRef.current.offsetWidth;
       document.documentElement.style.setProperty(
@@ -103,8 +73,6 @@ export const Dropdown = ({
         `${width}px`,
       );
     }
-
-    return () => {};
   }, [isOpen]);
 
   useEffect(() => {
@@ -141,40 +109,13 @@ export const Dropdown = ({
   const dropdownContent = (
     <div ref={dropdownRef} className="relative w-full">
       <div>
-        <button
-          type="button"
-          onClick={handleButtonClick}
-          className="w-full px-4 py-2 text-left bg-white border border-gray-300 rounded-xs focus:outline-none cursor-pointer relative pr-10"
-        >
-          {selectedOptions.length > 0 ? (
-            <div className="flex flex-wrap gap-1">
-              {selectedOptions.map((option) => (
-                <span
-                  key={option.value}
-                  className="bg-gray-200 px-2 py-1 rounded-full text-xs text-gray-800 flex items-center gap-1 group"
-                >
-                  {option.label}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleOptionClick(option);
-                    }}
-                    className="border cursor-pointer p-0.5 rounded-full transition-colors"
-                  >
-                    <X size={10} />
-                  </button>
-                </span>
-              ))}
-            </div>
-          ) : (
-            placeholder
-          )}
-          <ChevronDown
-            className={`lucide lucide-chevron-down absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 transition-transform duration-200 ${
-              isOpen ? "rotate-180" : "rotate-0"
-            }`}
-          />
-        </button>
+        <DropdownButton
+          selectedOptions={selectedOptions}
+          placeholder={placeholder}
+          isOpen={isOpen}
+          handleOptionClick={handleOptionClick}
+          handleButtonClick={() => setIsOpen(!isOpen)}
+        />
 
         <div
           className={`absolute w-full mt-1 bg-white z-10 transition-all duration-100 ease-in shadow-lg ${
@@ -184,50 +125,20 @@ export const Dropdown = ({
           }`}
         >
           {withSearch && (
-            <div className="relative w-full">
-              <input
-                ref={searchInputRef}
-                type="text"
-                placeholder="Search..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-8 py-2 border-x border-t border-gray-300 focus:outline-none pr-8"
-                onClick={(e) => e.stopPropagation()}
-              />
-              {searchTerm && (
-                <button
-                  onClick={() => setSearchTerm("")}
-                  className="absolute inset-y-0 right-0 flex items-center justify-center pr-2"
-                >
-                  <X className="lucide lucide-x absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-white bg-gray-400 rounded-full cursor-pointer p-0.5" />
-                </button>
-              )}
-              <Search className="lucide lucide-search text-gray-400 absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4" />
-            </div>
+            <SearchInput
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              searchInputRef={searchInputRef}
+            />
           )}
 
-          <ul className="max-h-60 overflow-auto px-4 pb-4 border-gray-300 border">
-            {filteredOptions.map((option) => (
-              <li
-                key={option.value}
-                onClick={() => handleOptionClick(option)}
-                className={`-mx-4 px-4 py-2 cursor-pointer hover:bg-gray-100 ${
-                  selectedOptions.some(
-                    (selected) => selected.value === option.value,
-                  )
-                    ? "bg-teal-100"
-                    : ""
-                }`}
-              >
-                {renderOption
-                  ? renderOption(option)
-                  : highlightText(option.label, searchTerm)}
-              </li>
-            ))}
-            {filteredOptions.length === 0 && (
-              <li className="px-4 py-2 text-gray-500">No options found</li>
-            )}
-          </ul>
+          <OptionsList
+            filteredOptions={filteredOptions}
+            selectedOptions={selectedOptions}
+            handleOptionClick={handleOptionClick}
+            renderOption={renderOption}
+            searchTerm={searchTerm}
+          />
         </div>
       </div>
     </div>
@@ -236,40 +147,13 @@ export const Dropdown = ({
   if (portal) {
     return (
       <div ref={dropdownRef} className="relative w-full">
-        <button
-          type="button"
-          onClick={handleButtonClick}
-          className="w-full px-4 py-2 text-left bg-white border border-gray-300 rounded-xs focus:outline-none cursor-pointer relative pr-10"
-        >
-          {selectedOptions.length > 0 ? (
-            <div className="flex flex-wrap gap-1">
-              {selectedOptions.map((option) => (
-                <span
-                  key={option.value}
-                  className="bg-gray-200 px-2 py-1 rounded-full text-xs text-gray-800 flex items-center gap-1 group"
-                >
-                  {option.label}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleOptionClick(option);
-                    }}
-                    className="border cursor-pointer p-0.5 rounded-full transition-colors"
-                  >
-                    <X size={10} />
-                  </button>
-                </span>
-              ))}
-            </div>
-          ) : (
-            placeholder
-          )}
-          <ChevronDown
-            className={`lucide lucide-chevron-down absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 transition-transform duration-200 ${
-              isOpen ? "rotate-180" : "rotate-0"
-            }`}
-          />
-        </button>
+        <DropdownButton
+          selectedOptions={selectedOptions}
+          placeholder={placeholder}
+          isOpen={isOpen}
+          handleOptionClick={handleOptionClick}
+          handleButtonClick={() => setIsOpen(!isOpen)}
+        />
         {createPortal(
           <div
             ref={portalRef}
@@ -291,49 +175,19 @@ export const Dropdown = ({
             }}
           >
             {withSearch && (
-              <div className="relative w-full">
-                <input
-                  ref={searchInputRef}
-                  type="text"
-                  placeholder="Search..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="bg-white w-full px-8 py-2 border-x border-t border-gray-300 focus:outline-none pr-8"
-                  onClick={(e) => e.stopPropagation()}
-                />
-                {searchTerm && (
-                  <button
-                    onClick={() => setSearchTerm("")}
-                    className="absolute inset-y-0 right-0 flex items-center justify-center pr-2"
-                  >
-                    <X className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-white bg-gray-400 rounded-full cursor-pointer p-0.5" />
-                  </button>
-                )}
-                <Search className="lucide lucide-search text-gray-400 absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4" />
-              </div>
+              <SearchInput
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                searchInputRef={searchInputRef}
+              />
             )}
-            <ul className="max-h-60 overflow-auto px-4 pb-4 border-gray-300 border bg-white">
-              {filteredOptions.map((option) => (
-                <li
-                  key={option.value}
-                  onClick={() => handleOptionClick(option)}
-                  className={`-mx-4 px-4 py-2 cursor-pointer hover:bg-gray-100 ${
-                    selectedOptions.some(
-                      (selected) => selected.value === option.value,
-                    )
-                      ? "bg-teal-100"
-                      : ""
-                  }`}
-                >
-                  {renderOption
-                    ? renderOption(option)
-                    : highlightText(option.label, searchTerm)}
-                </li>
-              ))}
-              {filteredOptions.length === 0 && (
-                <li className="px-4 py-2 text-gray-500">No options found</li>
-              )}
-            </ul>
+            <OptionsList
+              filteredOptions={filteredOptions}
+              selectedOptions={selectedOptions}
+              handleOptionClick={handleOptionClick}
+              renderOption={renderOption}
+              searchTerm={searchTerm}
+            />
           </div>,
           document.body,
         )}
